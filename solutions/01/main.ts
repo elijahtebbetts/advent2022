@@ -1,4 +1,4 @@
-import { openInputFile } from '../common'
+import { openInputFile } from '../../common'
 
 function solution(): number {
     const data = openInputFile(__dirname + '/input.txt').split('\n');
