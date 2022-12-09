@@ -33,21 +33,27 @@ function solution() {
 
     const data = openInputFile(__dirname + '/input.txt');
     const ROW_LENGTH = 4; //Each row of data input is 4 characters long
+    
     let partOnePoints: number = 0;
+    let partTwoPoints: number = 0;
 
     for (let i = 0; i < data.length; i += ROW_LENGTH) {
         const firstAlias = data[i];
         const secondAlias = data[i+2];
+
         const enemyMove = moveAliases[firstAlias];
         const playerMove = moveAliases[secondAlias];
+
         partOnePoints += calculateRoundPoints(enemyMove, playerMove);
+        partTwoPoints += calculateRoundPoints(enemyMove, createOutcome(enemyMove, secondAlias));
     }
 
     console.log(`Total points (Part 1): ${partOnePoints}`);
+    console.log(`Total points (Part 2): ${partTwoPoints}`);
 }
 
 
-function createOutcome(enemyMove: Move, outcomeAlias: 'X'|'Y'|'Z'): Move {
+function createOutcome(enemyMove: Move, outcomeAlias: string): Move {
     const LOSE = 'X';
     const DRAW = 'Y';
     const WIN = 'Z';
