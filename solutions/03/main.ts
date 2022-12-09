@@ -4,17 +4,21 @@ function solution() {
     const data = openInputFile(__dirname + '/input.txt').split('\n');
 
     let prioritySum = 0;
-
     for (let sack of data) {
         const firstHalf = sack.slice(0, sack.length / 2);
         const secondHalf = sack.slice(sack.length / 2, sack.length);
         const commonItem = findCommonItem(firstHalf, secondHalf);
 
-        //prioritySum += calculatePriority(commonItem);
         prioritySum += calculatePriority(commonItem);
     }
 
-    console.log(prioritySum);
+    let badgesPriority = 0;
+    for (let i = 0; i < data.length; i += 3) {
+        const badge = findBadge(data[i], data[i + 1], data[i + 2]);
+        badgesPriority += calculatePriority(badge);
+    }
+
+    console.log(prioritySum, badgesPriority)
 }
 
 function calculatePriority(item: string): number {
@@ -27,6 +31,15 @@ function calculatePriority(item: string): number {
         return charCode - UPPERCASE_OFFSET + 26;
     else 
         return charCode - LOWERCASE_OFFSET;
+}
+
+function findBadge(a: string, b: string, c: string): string {
+    for (let item of a) {
+        if (b.includes(item) && c.includes(item)) return item;
+    }
+
+    console.error("Unable to find badge. Exiting.");
+    process.exit();
 }
 
 function findCommonItem(a: string, b: string): string {
