@@ -21,6 +21,12 @@ function solution() {
     paper.defeats = rock;
     scissors.defeats = paper;
 
+    const moveAliases: Record<string, Move> = {
+        A: rock, B: paper, C: scissors,
+        X: rock, Y: paper, Z: scissors
+    };
+
+
     const data = openInputFile(__dirname + '/input.txt');
 }
 
