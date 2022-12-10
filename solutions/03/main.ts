@@ -12,13 +12,13 @@ function solution() {
         prioritySum += calculatePriority(commonItem);
     }
 
-    let badgesPriority = 0;
+    let badgesPrioritySum = 0;
     for (let i = 0; i < data.length; i += 3) {
         const badge = findBadge(data[i], data[i + 1], data[i + 2]);
-        badgesPriority += calculatePriority(badge);
+        badgesPrioritySum += calculatePriority(badge);
     }
 
-    console.log(prioritySum, badgesPriority)
+    console.log(prioritySum, badgesPrioritySum)
 }
 
 function calculatePriority(item: string): number {
