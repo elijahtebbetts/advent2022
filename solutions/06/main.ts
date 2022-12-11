@@ -2,7 +2,7 @@ import { openInputFile } from '../../common'
 
 function solution() {
     const data = openInputFile(__dirname + '/input.txt').split('');
-    const BUFFER_LENGTH = 4;
+    const BUFFER_LENGTH = 14;
     let buffer: string[] = [];
 
     //Fill our buffer with the first n characters
