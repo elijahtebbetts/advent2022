@@ -46,8 +46,6 @@ function solution() {
     else {
         console.log("Unique buffer not found");
     }
-
-    
 }
 
 solution();
