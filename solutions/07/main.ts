@@ -1,29 +1,30 @@
 import { openInputFile } from '../../common.js'
 
+class Directory {
+    constructor(
+        public name: string,
+        public parent: Directory | null,
+        public contents: (File | Directory)[]
+    ) {}
+}
+
+class File {
+    constructor (
+        public name: string,
+        public parent: Directory,
+        public size: number
+    ) {}
+}
+
 function solution() {
     const data = openInputFile(__dirname + '/input.txt').split('\n');
-    data.shift();
-
-    class Directory {
-        constructor(
-            public name: string,
-            public parent: Directory | null,
-            public contents: (File | Directory)[]
-        ) {}
-    }
-
-    class File {
-        constructor (
-            public name: string,
-            public parent: Directory,
-            public size: number
-        ) {}
-    }
+    data.shift(); //The first command is just moving to /, we can take that for granted
 
     let root = new Directory("/", null, [])
     let directories: Directory[] = [root];
     let currentDirectory: Directory = root;
     
+    //Parse input data and create a tree structure based on it
     while(data.length > 0) {
         const line = data.shift();
         if (line) {
@@ -46,9 +47,30 @@ function solution() {
         }
     }
 
-    findDirectoriesUnderSize();
+    //Part one answer
+    findDirectoriesUnderSize(100000);
 
-    function findDirectoriesUnderSize(maxSize: number = 100000) {
+    //Part two answer
+    const FILESYSTEM_CAPACITY = 70000000;
+    const SPACE_NEEDED = 30000000;
+    const SPACE_USED = getDirSize(true, root);
+    const SPACE_AVAILABLE = FILESYSTEM_CAPACITY - SPACE_USED;
+    const MINIMUM_SIZE_TO_DELETE = SPACE_NEEDED - SPACE_AVAILABLE;
+    console.log(`\nSpace Used: ${SPACE_USED}`);
+    console.log(`Space Available: ${SPACE_AVAILABLE}`);
+    console.log(`Minimum To Delete: ${MINIMUM_SIZE_TO_DELETE}`);
+
+    let sizes: number[] = [];
+    for (let dir of directories) {
+        const size = getDirSize(true, dir);
+
+        if (size >= MINIMUM_SIZE_TO_DELETE)
+            sizes.push(size);
+    }
+    sizes.sort((a, b) => a - b);
+    console.log(`Size to delete: ${sizes[0]}`);
+
+    function findDirectoriesUnderSize(maxSize: number) {
         let dirCount = 1;
         let totalSize = 0;
 
@@ -62,7 +84,7 @@ function solution() {
             }
         }
 
-        console.log(totalSize);
+        console.log(`Total Size: ${totalSize}`);
     }
 
     function up() {
@@ -102,6 +124,7 @@ function solution() {
         currentDirectory.contents.push(newFile);
     }
 
+    //Used this for debugging. Not really needed for solutions, but nice to have.
     function ls() {
         console.log(`listing ${pwd()}`);
         for (let child of currentDirectory.contents) {
