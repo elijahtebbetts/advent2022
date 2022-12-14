@@ -30,6 +30,7 @@ function solution() {
 function ropeSimulation(numKnots: number): number {
     let knots: Point[] = [];
     
+    //Initialize knots
     for (let i = 0; i < numKnots; i++) {
         knots.push({x: 0, y: 0});
     }
@@ -37,16 +38,15 @@ function ropeSimulation(numKnots: number): number {
     const head: Point = knots[0];
     const tail: Point = knots[knots.length - 1];
     let tailPositions: Point[] = [];
-    let tailSet = new Set();
 
     for (let i = 0; i < data.length; i++) {
         const move: Move = moves[data[i].dirString];
+        const distance: number = data[i].distance;
 
-        for (let n = 0; n < data[i].distance; n++) {
+        for (let n = 0; n < distance; n++) {
             //Head Tick
             head.x += move.dx;
             head.y += move.dy;
-            //console.log(head)
 
             //Knots Tick
             for (let k = 1; k < numKnots; k++) {
@@ -87,13 +87,11 @@ function ropeSimulation(numKnots: number): number {
                 }
 
                 pushTailPosition(tailPositions, {x: tail.x, y: tail.y});
-                tailSet.add(`${tail.x},${tail.y}`);
-                //console.log(knot)
             }
         }
     }
     
-    return tailSet.size;
+    return tailPositions.length;
 }
 
 function pushTailPosition(set: Point[], point: Point) {
