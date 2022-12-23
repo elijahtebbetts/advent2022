@@ -13,7 +13,7 @@ class Monkey {
         public inspectCount: number = 0
     ) {}
 
-    inspect(divide: boolean = true) {
+    inspect(worryClamp: number, divideByThree: boolean = true) {
         if (this.operation.sign === '+') {
             if (isNaN(this.operation.val)) this.items[0] += this.items[0]
             else this.items[0] += this.operation.val;
@@ -23,7 +23,9 @@ class Monkey {
             else this.items[0] *= this.operation.val;
         }
 
-        if (divide) this.items[0] = Math.floor(this.items[0] / 3);
+        if (divideByThree) this.items[0] = Math.floor(this.items[0] / 3);
+        else this.items[0] = this.items[0] % worryClamp;
+        
         this.inspectCount++;
         return this.items[0];
     }
@@ -41,6 +43,11 @@ class Monkey {
 
 
 function solution() {
+    //This will keep the worry levels "manageable" (aka <Infinity) by
+    //finding the product of all the division test values
+    //and "clamping" the worry value after each inspection (n = n % worryClamp)
+    let worryClamp: number = 1;
+
     while (data.length > 0) {
         data.shift()
         const startingItems = data.shift()
@@ -53,6 +60,7 @@ function solution() {
             .split(' ') || [''];
 
         const testInput = parseInt(data.shift()?.split(' ').pop() || '');
+        worryClamp *= testInput;
         const throwOnTrue = parseInt(data.shift()?.split(' ').pop() || '');
         const throwOnFalse = parseInt(data.shift()?.split(' ').pop() || '');
 
@@ -67,19 +75,18 @@ function solution() {
         data.shift();
     }
 
-    const NUM_ROUNDS = 20;
+    const NUM_ROUNDS = 10000;
 
     for (let round = 0; round < NUM_ROUNDS; round++) {
         for (let m of monkies) {
             while (m.items.length > 0) {
-                m.inspect();
+                m.inspect(worryClamp, false);
                 m.throw();
             }
         }
     }
 
-    sortMonkies()
-    
+    sortMonkies();
     console.log(monkies);
     console.log(monkies[0].inspectCount * monkies[1].inspectCount);
 }
