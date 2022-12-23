@@ -9,10 +9,11 @@ class Monkey {
         public operation: {sign: string, val: number},
         public testInput: number,
         public throwOnTrue: number,
-        public throwOnFalse: number
+        public throwOnFalse: number,
+        public inspectCount: number = 0
     ) {}
 
-    inspect() {        
+    inspect(divide: boolean = true) {
         if (this.operation.sign === '+') {
             if (isNaN(this.operation.val)) this.items[0] += this.items[0]
             else this.items[0] += this.operation.val;
@@ -22,8 +23,8 @@ class Monkey {
             else this.items[0] *= this.operation.val;
         }
 
-        this.items[0] = Math.floor(this.items[0] / 3);
-
+        if (divide) this.items[0] = Math.floor(this.items[0] / 3);
+        this.inspectCount++;
         return this.items[0];
     }
 
@@ -66,8 +67,30 @@ function solution() {
         data.shift();
     }
 
-    //console.log(monkies);
+    const NUM_ROUNDS = 20;
+
+    for (let round = 0; round < NUM_ROUNDS; round++) {
+        for (let m of monkies) {
+            while (m.items.length > 0) {
+                m.inspect();
+                m.throw();
+            }
+        }
+    }
+
+    sortMonkies()
+    
+    console.log(monkies);
+    console.log(monkies[0].inspectCount * monkies[1].inspectCount);
 }
 
+function sortMonkies() {
+    monkies.sort( function (a, b) {
+        if (a.inspectCount < b.inspectCount)
+            return 1;
+        else 
+            return -1;
+    })
+}
 
 solution();
